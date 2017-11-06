@@ -331,7 +331,7 @@
         [self.output addTarget:self.gpuImageView];
         if(self.saveLocalVideo) [self.output addTarget:self.movieWriter];
     }
-    
+
     [self.filter forceProcessingAtSize:self.configuration.videoSize];
     [self.output forceProcessingAtSize:self.configuration.videoSize];
     [self.blendFilter forceProcessingAtSize:self.configuration.videoSize];
