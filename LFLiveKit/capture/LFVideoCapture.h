@@ -76,6 +76,9 @@
 - (nullable instancetype)init UNAVAILABLE_ATTRIBUTE;
 + (nullable instancetype)new UNAVAILABLE_ATTRIBUTE;
 
+- (void)startRecording;
+- (void)stopRecording;
+
 /**
    The designated initializer. Multiple instances with the same configuration will make the
    capture unstable.

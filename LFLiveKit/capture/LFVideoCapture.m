@@ -98,13 +98,34 @@
     if (!_running) {
         [UIApplication sharedApplication].idleTimerDisabled = NO;
         [self.videoCamera stopCameraCapture];
-        if(self.saveLocalVideo) [self.movieWriter finishRecording];
     } else {
         [UIApplication sharedApplication].idleTimerDisabled = YES;
         [self reloadFilter];
         [self.videoCamera startCameraCapture];
-        if(self.saveLocalVideo) [self.movieWriter startRecording];
     }
+}
+
+- (void)startRecording {
+    if(self.saveLocalVideo) {
+        NSString *filePath = [self.saveLocalVideoPath absoluteString];
+        filePath = [filePath stringByReplacingOccurrencesOfString: @"file://" withString:@""];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+
+        NSError *error;
+        BOOL success;
+        if([fileManager fileExistsAtPath:filePath]) {
+            success = [fileManager removeItemAtPath:filePath error:&error];
+        } else {
+            success = YES;
+        }
+        if(success) {
+            [self.movieWriter startRecording];
+        }
+    };
+}
+
+- (void)stopRecording {
+    if(self.saveLocalVideo) [self.movieWriter finishRecording];
 }
 
 - (void)setPreView:(UIView *)preView {

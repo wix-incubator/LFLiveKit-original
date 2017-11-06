@@ -101,12 +101,15 @@
     _streamInfo.videoConfiguration = _videoConfiguration;
     _streamInfo.audioConfiguration = _audioConfiguration;
     [self.socket start];
+    
+    [self.videoCaptureSource startRecording];
 }
 
 - (void)stopLive {
     self.uploading = NO;
     [self.socket stop];
     self.socket = nil;
+    [self.videoCaptureSource stopRecording];
 }
 
 - (void)pushVideo:(nullable CVPixelBufferRef)pixelBuffer{
