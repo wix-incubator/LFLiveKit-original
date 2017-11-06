@@ -373,9 +373,10 @@
     NSLog(@"UIApplicationDidChangeStatusBarOrientationNotification. UserInfo: %@", notification.userInfo);
     UIInterfaceOrientation statusBar = [[UIApplication sharedApplication] statusBarOrientation];
     if(self.configuration.autorotate){
+        CGSize videoSize = self.configuration.videoSize;
         [self.configuration setOutputImageOrientation:statusBar];
-        [self.configuration refreshVideoSize];
         [self.videoCamera setOutputImageOrientation: statusBar];
+        [self.configuration setVideoSize:CGSizeMake(videoSize.height, videoSize.width)];
         
         if (self.delegate && [self.delegate respondsToSelector:@selector(resetEncoder)]) {
             [self.delegate resetEncoder];
