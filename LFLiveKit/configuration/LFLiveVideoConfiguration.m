@@ -370,4 +370,18 @@
     return desc;
 }
 
+- (void)refreshVideoSize {
+    CGSize size = self.videoSize;
+    if(self.landscape) {
+        CGFloat width = MAX(size.width, size.height);
+        CGFloat height = MIN(size.width, size.height);
+        [self setVideoSize:CGSizeMake(width, height)];
+    } else {
+        CGFloat width = MIN(size.width, size.height);
+        CGFloat height = MAX(size.width, size.height);
+        self.videoSize = CGSizeMake(width, height);
+        [self setVideoSize:CGSizeMake(width, height)];
+    }
+}
+
 @end

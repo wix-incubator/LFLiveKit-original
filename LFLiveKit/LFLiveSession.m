@@ -364,6 +364,10 @@
     return _videoCaptureSource;
 }
 
+- (void) resetEncoder {
+    _videoEncoder = nil;
+}
+
 - (id<LFAudioEncoding>)audioEncoder {
     if (!_audioEncoder) {
         _audioEncoder = [[LFHardwareAudioEncoder alloc] initWithAudioStreamConfiguration:_audioConfiguration];
