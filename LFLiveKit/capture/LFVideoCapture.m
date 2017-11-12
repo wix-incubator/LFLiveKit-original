@@ -10,14 +10,6 @@
 #import "LFGPUImageBeautyFilter.h"
 #import "LFGPUImageEmptyFilter.h"
 
-#if __has_include(<GPUImage/GPUImage.h>)
-#import <GPUImage/GPUImage.h>
-#elif __has_include("GPUImage/GPUImage.h")
-#import "GPUImage/GPUImage.h"
-#else
-#import "GPUImage.h"
-#endif
-
 @interface LFVideoCapture ()
 
 @property (nonatomic, strong) GPUImageVideoCamera *videoCamera;
@@ -31,8 +23,6 @@
 @property (nonatomic, strong) GPUImageAlphaBlendFilter *blendFilter;
 @property (nonatomic, strong) GPUImageUIElement *uiElementInput;
 @property (nonatomic, strong) UIView *waterMarkContentView;
-
-@property (nonatomic, strong) GPUImageMovieWriter *movieWriter;
 
 @end
 

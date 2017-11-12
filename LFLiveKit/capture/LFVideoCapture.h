@@ -10,6 +10,14 @@
 #import <AVFoundation/AVFoundation.h>
 #import "LFLiveVideoConfiguration.h"
 
+#if __has_include(<GPUImage/GPUImage.h>)
+#import <GPUImage/GPUImage.h>
+#elif __has_include("GPUImage/GPUImage.h")
+#import "GPUImage/GPUImage.h"
+#else
+#import "GPUImage.h"
+#endif
+
 @class LFVideoCapture;
 /** LFVideoCapture callback videoData */
 @protocol LFVideoCaptureDelegate <NSObject>
@@ -68,6 +76,9 @@
 
 /* The saveLocalVideoPath is save the local video  path */
 @property (nonatomic, strong, nullable) NSURL *saveLocalVideoPath;
+
+@property (nonatomic, strong) GPUImageMovieWriter *movieWriter;
+
 
 #pragma mark - Initializer
 ///=============================================================================
