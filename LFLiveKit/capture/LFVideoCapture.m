@@ -278,7 +278,8 @@
 
 - (GPUImageMovieWriter*)movieWriter{
     if(!_movieWriter){
-        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.saveLocalVideoPath size:self.configuration.videoSize];
+        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.saveLocalVideoPath size:self.configuration.videoSize ];
+//        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.saveLocalVideoPath size:self.configuration.videoSize fileType:AVFileTypeMPEG4 outputSettings:@{}];
         _movieWriter.encodingLiveVideo = YES;
         _movieWriter.shouldPassthroughAudio = YES;
         self.videoCamera.audioEncodingTarget = self.movieWriter;

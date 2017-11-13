@@ -268,8 +268,8 @@
 }
 
 - (void)setSaveLocalVideoPath:(NSURL*)saveLocalVideoPath{
-    [self.videoCaptureSource setSaveLocalVideoPath:saveLocalVideoPath];
     self.videoCaptureSource.movieWriter = nil;
+    [self.videoCaptureSource setSaveLocalVideoPath:saveLocalVideoPath];
 }
 
 - (BOOL)beautyFace {

@@ -37,10 +37,10 @@
         }
         
         
-#ifdef DEBUG
-        enabledWriteVideoFile = NO;
-        [self initForFilePath];
-#endif
+//#ifdef DEBUG
+//        enabledWriteVideoFile = NO;
+//        [self initForFilePath];
+//#endif
     }
     return self;
 }

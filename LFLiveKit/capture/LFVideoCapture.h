@@ -77,7 +77,7 @@
 /* The saveLocalVideoPath is save the local video  path */
 @property (nonatomic, strong, nullable) NSURL *saveLocalVideoPath;
 
-@property (nonatomic, strong) GPUImageMovieWriter *movieWriter;
+@property (nonatomic, strong, nullable) GPUImageMovieWriter *movieWriter;
 
 
 #pragma mark - Initializer
