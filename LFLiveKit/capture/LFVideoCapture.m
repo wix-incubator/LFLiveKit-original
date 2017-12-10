@@ -39,8 +39,8 @@
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChanged:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
+
         self.beautyFace = YES;
         self.beautyLevel = 0.5;
         self.brightLevel = 0.5;
@@ -54,7 +54,7 @@
     AVCaptureSession *session = (AVCaptureSession *)self.videoCamera.captureSession;
     [session beginConfiguration];
     _configuration = configuration;
-    _videoCamera.outputImageOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    _videoCamera.outputImageOrientation = configuration.outputImageOrientation;
     [session commitConfiguration];
 }
 
@@ -348,7 +348,19 @@
     [self.blendFilter forceProcessingAtSize:self.configuration.videoSize];
     [self.uiElementInput forceProcessingAtSize:self.configuration.videoSize];
     
+    UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
     
+    GPUImageRotationMode kRotateMode = kGPUImageNoRotation;
+    if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {
+        kRotateMode = kGPUImageRotateRight;
+    } else if (deviceOrientation == UIDeviceOrientationLandscapeRight) {
+        kRotateMode = kGPUImageRotateLeft;
+    } else if (UIDeviceOrientationIsPortrait(deviceOrientation)) {
+        kRotateMode = kGPUImageNoRotation;
+    }
+    
+    [self.gpuImageView setInputRotation:kRotateMode atIndex:0];
+    [self.filter setInputRotation:kRotateMode atIndex:0];
     //< 输出数据
     __weak typeof(self) _self = self;
     [self.output setFrameProcessingCompletionBlock:^(GPUImageOutput *output, CMTime time) {
@@ -380,22 +392,36 @@
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 }
 
+- (void)deviceOrientationChanged:(NSNotification *)notification {
+    NSLog(@"UIApplicationDidChangeStatusBarOrientationNotification. UserInfo: %@", notification.userInfo);
+    UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+    
+    UIInterfaceOrientation statusBar = UIInterfaceOrientationPortrait;
+    if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {
+        statusBar = UIInterfaceOrientationLandscapeRight;
+    } else if (deviceOrientation == UIDeviceOrientationLandscapeRight) {
+        statusBar = UIInterfaceOrientationLandscapeLeft;
+    } else if (deviceOrientation == UIDeviceOrientationPortrait) {
+        statusBar = UIInterfaceOrientationPortrait;
+    }
+    
+    [self updateOrientation:statusBar];
+}
+
 - (void)statusBarChanged:(NSNotification *)notification {
     NSLog(@"UIApplicationDidChangeStatusBarOrientationNotification. UserInfo: %@", notification.userInfo);
     UIInterfaceOrientation statusBar = [[UIApplication sharedApplication] statusBarOrientation];
-    if(self.configuration.autorotate){
-        CGSize videoSize = self.configuration.videoSize;
-        [self.configuration setOutputImageOrientation:statusBar];
-        [self.videoCamera setOutputImageOrientation: statusBar];
-        [self.configuration setVideoSize:CGSizeMake(videoSize.height, videoSize.width)];
-        
-        if (self.delegate && [self.delegate respondsToSelector:@selector(resetEncoder)]) {
-            [self.delegate resetEncoder];
-        }
+    [self updateOrientation:statusBar];
+}
 
-        
-        [self updateVideoConfiguration:self.configuration];
+- (void) updateOrientation:(UIInterfaceOrientation)statusBar {
+    if(self.configuration.autorotate){
+        [self.configuration setOutputImageOrientation:statusBar];
+        [self.configuration refreshVideoSize];
+        [self.videoCamera setOutputImageOrientation:statusBar];
         [self reloadFilter];
     }
 }
+
+
 @end
