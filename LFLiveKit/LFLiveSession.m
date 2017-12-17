@@ -433,4 +433,9 @@
     }
 }
 
+- (void)setAutorotate:(BOOL)autorotate {
+    _videoConfiguration.autorotate = autorotate;
+}
+
+
 @end
